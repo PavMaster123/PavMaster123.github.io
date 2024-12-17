@@ -1,0 +1,199 @@
+<html>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Aldrich&display=swap" rel="stylesheet">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Aldrich&display=swap");
+
+        body{
+            background-color: #070707;
+            margin:0;
+            display:flex;
+            align-items:center;
+            background-size: 2.5em 2.5em;
+            background-image:
+                linear-gradient(0deg, #050505 1px, transparent 1px),
+                linear-gradient(90deg, #050505 1px, transparent 1px);
+        }
+
+        .intro-text{
+            color: #ffffff;
+            font-family: "Aldrich", monospace;
+            user-select: none;
+            font-size: 5em;
+        }
+
+        .Atext{
+            color: #ffffff;
+            font-family: monospace;
+            user-select: none;
+            font-size: 2em;
+        }
+
+        .Btext{
+            color: #ffffff;
+            font-family: "Aldrich", monospace;
+            user-select: none;
+            font-size: 2em;
+            display: inline-block;
+        }
+
+        .header-text{
+            color: #ffffff;
+            font-family: "Aldrich", monospace;
+            user-select: none;
+            font-size: 3em;
+            top:0;
+            right:0;
+            position:absolute;
+            margin:0;
+            padding-right: 0.25em;
+            background: linear-gradient(to right, #ffffff 10%, #dddddd 50%, #eeeeee 60%);
+            background-size: auto auto;
+            background-clip: border-box;
+            background-size: 200% auto;
+            color: #fff;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textclip 1.5s linear infinite;
+            display: inline-block;
+        }
+
+        .center{
+            max-width: fit-content;
+            margin: auto;
+        }
+
+        @keyframes textclip {
+            to {
+            background-position: 200% center;
+            }
+        }
+
+        .hidden{
+            display: none;
+            width: 0;
+            height: 0;
+        }
+
+        .white{
+            background-color: #f0f0f0
+        }
+
+        .gold{
+            background-color: #fdbd01
+        }
+
+        
+    </style>
+    <body>
+        <div class="center">
+            <canvas class="center" id="e" width="420px" height="420px">
+            </canvas>
+            <p class="Atext">ROW:&nbsp;&nbsp;<input id="number" type="number" style="vertical-align: middle;"></input></p>
+            <p class="Atext">COLUMN:&nbsp;&nbsp;<input id="number1" type="number" style="vertical-align: middle;"></input></p>
+            <p class="Btext">Number of<p class="Btext" style="color:#fdbd01">&nbsp;Yellow&nbsp;</p><p class="Btext">Tiles:&nbsp;</p> <p class="Btext" id="y">0</p></p>
+            <p class="Btext">Number of<p class="Btext" style="color:#bababa">&nbsp;White&nbsp;</p><p class="Btext">Tiles:&nbsp;</p> <p class="Btext" id="w">100</p></p>
+        
+        </div>
+    </body>
+    <script>
+        var bw = 400;
+        var bh = 400;
+        var p = 10;
+        var canvas = document.getElementById("e");
+        var context = canvas.getContext("2d");
+        function drawBoard(){
+            for (var x = 0; x <= bw; x += 40) {
+                context.moveTo(0.5 + x + p, p);
+                context.lineTo(0.5 + x + p, bh + p);
+            }
+
+            for (var x = 0; x <= bh; x += 40) {
+                context.moveTo(p, 0.5 + x + p);
+                context.lineTo(bw + p, 0.5 + x + p);
+            }
+            context.strokeStyle = "white";
+            context.stroke();
+        }
+
+        var dat = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ];
+
+        drawBoard();
+
+        function colourSquare(x, y){
+            context.fillStyle = "#fdbd01";
+            context.fillRect(x*40+p+0.5, y*40+p+0.5, 40, 40);
+        }
+        colourSquare(4, 6);
+        var _y = document.getElementById("y");
+        var _w = document.getElementById("w");
+        function full(){
+            var __y = 0;
+            var __w = 0;
+            for(var x = 0; x < 10; x++){
+                for(var y = 0; y < 10; y++){
+                    if(dat[x][y] == 0){
+                        __w++;
+                        context.fillStyle = "#f0f0f0";
+                    }else{
+                        __y++;
+                        context.fillStyle = "#fdbd01";
+                    }
+                    context.fillRect(x*40+p+0.5, y*40+p+0.5, 40, 40);
+                }
+            }
+            console.log(__w);
+            console.log(__y);
+            _w.innerHTML = __w;
+            _y.innerHTML = __y;
+        }
+        full();
+        const textInput = document.getElementById('number1');
+            textInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                for(var x = 0; x < 10; x++) dat[Number(textInput.value)][x] = 1-dat[Number(textInput.value)][x];
+                full();
+                var y = 0;
+                var w = 0;
+                //for(var i = 0; i < 9; i++){
+                //    for(var j = 0; j < 9; j++){
+                //        if(dat[i][j] == 0){
+                //            w++;
+                //        }else{
+                //            y++;
+                //        }
+                //    }
+                //}
+                //_w.innerHTML = w;
+                //_y.innerHTML = y;
+            }
+        });
+
+        const textInput1 = document.getElementById('number');
+            textInput1.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                for(var x = 0; x < 10; x++) dat[x][Number(textInput1.value)] = 1-dat[x][Number(textInput1.value)];
+                full();
+            }
+        });
+
+        document.addEventListener('keydown', function(event) {
+            if(event.key == "h"){
+                window.location.href = "./other.html"
+            }
+        });
+    </script>
+</html>
